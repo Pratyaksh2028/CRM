@@ -41,3 +41,21 @@ CREATE TABLE leads (
     REFERENCES users(id)
 );
 
+CREATE TABLE notes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    lead_id INT,
+    note TEXT NOT NULL,
+    created_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (customer_id)
+    REFERENCES customers(id),
+
+    FOREIGN KEY (lead_id)
+    REFERENCES leads(id),
+
+    FOREIGN KEY (created_by)
+    REFERENCES users(id)
+);
+
