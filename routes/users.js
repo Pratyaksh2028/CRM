@@ -4,8 +4,14 @@ const db = require("../config/db");
 const { checkLogin, checkAdmin } = require("../middleware/auth");
 const router = express.Router();
 
-router.use(checkLogin, checkAdmin);
+// ==========================================
+// PUBLIC ROUTES (No Token Needed to Bootstrap Admin)
+// ==========================================
 
+/**
+ * Create a new user
+ * POST /users
+ */
 router.post("/", async (req, res) => {
   try {
     const { name, email, password, role = "agent" } = req.body;
@@ -21,6 +27,15 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ==========================================
+// PROTECTED ROUTES (Middleware Applied Globally Below)
+// ==========================================
+router.use(checkLogin, checkAdmin);
+
+/**
+ * Get all users
+ * GET /users
+ */
 router.get("/", async (req, res) => {
   try {
     const [users] = await db.query("SELECT id, name, email, role, created_at FROM users ORDER BY id DESC");
@@ -30,6 +45,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+/**
+ * Get a single user by ID
+ * GET /users/:id
+ */
 router.get("/:id", async (req, res) => {
   try {
     const [users] = await db.query("SELECT id, name, email, role, created_at FROM users WHERE id = ?", [req.params.id]);
@@ -40,6 +59,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+/**
+ * Update a user
+ * PUT /users/:id
+ */
 router.put("/:id", async (req, res) => {
   try {
     const { name, role } = req.body;
@@ -51,6 +74,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+/**
+ * Delete a user
+ * DELETE /users/:id
+ */
 router.delete("/:id", async (req, res) => {
   try {
     const [result] = await db.query("DELETE FROM users WHERE id = ?", [req.params.id]);
