@@ -1,3 +1,8 @@
+/**
+ * Authentication Middleware
+ * Handles JWT verification and role-based access validation.
+ */
+
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
